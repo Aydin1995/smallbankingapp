@@ -1,0 +1,30 @@
+create table CUSTOMER
+(
+    ID         NUMBER generated as identity
+        primary key,
+    NAME       VARCHAR2(20 char),
+    SURNAME    VARCHAR2(20 char),
+    BALANCE    NUMBER,
+    BIRTH_DATE DATE,
+    GSM_NUMBER VARCHAR2(255 char)
+
+)
+/
+
+create table PAYMENT
+(
+    ID                      NUMBER generated as identity
+        primary key,
+    REFERRAL_TRANSACTION_ID VARCHAR2(255),
+    TRANSACTION_AMOUNT      NUMBER ,
+    TRANSACTION_DATE        DATE ,
+    TRANSACTION_ID          VARCHAR2(255 char),
+    TRANSACTION_STATUS      VARCHAR2(50 char),
+    TRANSACTION_TYPE        VARCHAR2(50 char),
+    CUSTOMER_ID             NUMBER
+        constraint FKSDJUC6AFOEFCJ8L2RS6SMC5M2
+            references CUSTOMER
+)
+/
+
+
