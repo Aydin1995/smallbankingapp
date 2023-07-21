@@ -6,10 +6,11 @@ import com.example.smallbanking.entity.Payment;
 import java.time.LocalDateTime;
 
 public class ResponseBuilder {
-    public static PaymentResponseDto successResponse(Payment payment) {
+    public static PaymentResponseDto successResponse(Long customerId, Payment payment) {
 
         return new PaymentResponseDto()
                 .setStatus("SUCCESS")
+                .setCustomerId(customerId)
                 .setTransactionId(payment.getTransactionId())
                 .setAmount(payment.getTransactionAmount())
                 .setTransactionType(payment.getTransactionType())

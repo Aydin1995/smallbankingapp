@@ -49,37 +49,37 @@ public class RefundServiceImpl implements RefundService {
                 .collect(Collectors.toList());
 
         BigDecimal inputAmount = paymentRequestDto.getAmount();
-        Payment refundPayment;
         if (refundTransactions.isEmpty()) {
             if (inputAmount.compareTo(purchaseAmount) > 0) {
                 throw new RuntimeException("exceeds refund amount");
             }
-            refundPayment = PaymentBuilder.build(inputAmount, PaymentTypeEnum.REFUND);
-            refundPayment.setReferralTransactionId(transactionId);
-            customer.addPayment(refundPayment);
-            customerRepository.save(customer);
-            return ResponseBuilder.successResponse(refundPayment);
+            return saveAndReturnPaymentResponseDto(customer, transactionId, inputAmount);
         } else {
             BigDecimal refundAmount =
                     refundTransactions
                             .stream()
                             .map(Payment::getTransactionAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-
             if (refundAmount.compareTo(purchaseAmount) == 0) {
                 throw new RuntimeException("payment already refunded");
             }
 
             if (inputAmount.add(refundAmount).compareTo(purchaseAmount) <= 0) {
-                refundPayment = PaymentBuilder.build(inputAmount, PaymentTypeEnum.REFUND);
-                refundPayment.setReferralTransactionId(transactionId);
-                customer.addPayment(refundPayment);
-                customerRepository.save(customer);
+                return saveAndReturnPaymentResponseDto(customer, transactionId, inputAmount);
             } else {
                 throw new RuntimeException("exceeds refund amount");
             }
 
         }
-        return ResponseBuilder.successResponse(refundPayment);
+    }
+
+    private PaymentResponseDto saveAndReturnPaymentResponseDto(Customer customer, String transactionId, BigDecimal inputAmount) {
+        Payment refundPayment;
+        refundPayment = PaymentBuilder.build(inputAmount, PaymentTypeEnum.REFUND);
+        refundPayment.setReferralTransactionId(transactionId);
+        customer.setBalance(customer.getBalance().add(inputAmount));
+        customer.addPayment(refundPayment);
+        customerRepository.save(customer);
+        return ResponseBuilder.successResponse(customer.getId(), refundPayment);
     }
 }

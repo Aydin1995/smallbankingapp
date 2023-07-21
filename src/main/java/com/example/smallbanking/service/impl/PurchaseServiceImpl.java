@@ -32,11 +32,10 @@ public class PurchaseServiceImpl implements PurchaseService {
         }
         BigDecimal subtractedBalance = balance.subtract(amount);
         customer.setBalance(subtractedBalance);
-
         Payment payment =  PaymentBuilder.build(amount, PaymentTypeEnum.PURCHASE);
         customer.addPayment(payment);
         customerRepository.save(customer);
 
-        return ResponseBuilder.successResponse(payment);
+        return ResponseBuilder.successResponse(customer.getId(), payment);
     }
 }

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class PaymentResponseDto  {
 
     private String status;
+    private Long customerId;
     private String transactionId;
     private BigDecimal amount;
     private String transactionType;
@@ -56,6 +57,15 @@ public class PaymentResponseDto  {
 
     public PaymentResponseDto setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+        return this;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public PaymentResponseDto setCustomerId(Long customerId) {
+        this.customerId = customerId;
         return this;
     }
 

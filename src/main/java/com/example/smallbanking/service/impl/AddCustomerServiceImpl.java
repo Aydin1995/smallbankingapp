@@ -27,7 +27,7 @@ public class AddCustomerServiceImpl implements AddCustomerService {
         Customer customer = CustomerBuilder.build(addCustomerRequestDto);
         Payment payment = PaymentBuilder.build(new BigDecimal(100), PaymentTypeEnum.ADD_BALANCE);
         customer.addPayment(payment);
-        customerRepository.save(customer);
-        return ResponseBuilder.successResponse(payment);
+        Customer saved = customerRepository.save(customer);
+        return ResponseBuilder.successResponse(saved.getId(), payment);
     }
 }

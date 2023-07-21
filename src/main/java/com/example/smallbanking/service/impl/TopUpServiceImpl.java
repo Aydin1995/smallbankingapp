@@ -31,6 +31,6 @@ public class TopUpServiceImpl implements TopUpService {
         customer.addPayment(payment);
         customer.setBalance(addedBalance);
         customerRepository.save(customer);
-        return ResponseBuilder.successResponse(payment);
+        return ResponseBuilder.successResponse(customer.getId(), payment);
     }
 }
